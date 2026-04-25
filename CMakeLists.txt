@@ -12,5 +12,3 @@ file(GLOB_RECURSE SOURCES
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
-find_package(glfw3 REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw GL)
