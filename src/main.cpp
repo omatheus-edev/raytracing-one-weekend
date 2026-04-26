@@ -1,7 +1,8 @@
 #include <iostream>
+#include "math/vec3.hpp"
+#include "color.hpp"
 
 int main() {
-
     int image_width = 256;
     int image_height = 256;
 
@@ -9,14 +10,8 @@ int main() {
     for (int j = 0; j < image_height; j++) {
         std::clog << "\nScanlines remaining: " << (image_height - j) << " " << std::flush;
         for (int i = 0; i < image_width; i++) {
-            float r = double(i) / (image_width - 1);
-            float g = double(j) / (image_height-1);
-            float b = 0.0;
-            int ir = int(255.999 * r);
-            int ig = int(255.999 * g);
-            int ib = int(255.999 * b);
-
-            std::cout << ir << ' ' << ig << ' ' << ib << '\n';
+            Color pixel_color = Color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0);
+            write_color(std::cout, pixel_color);
         }
     }
     std::clog << "\rDone.\n";
