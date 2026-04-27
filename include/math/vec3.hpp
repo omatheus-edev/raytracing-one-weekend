@@ -52,8 +52,8 @@ inline Vec3 operator/(const Vec3& vec, double value) {
 
 inline double dot(const Vec3& vec, const Vec3& other) {
     return vec.x * other.x +
-            vec.y + other.y +
-            vec.z + other.z;
+            vec.y * other.y +
+            vec.z * other.z;
 }
 
 inline Vec3 cross(const Vec3& vec, const Vec3& other) {
