@@ -1,21 +1,30 @@
 #include <iostream>
+#include <cmath>
 #include "math/vec3.hpp"
 #include "color.hpp"
 #include "ray.hpp"
 
-bool hit_sphere(const Vec3& center, double radius, const Ray& ray) {
+double hit_sphere(const Vec3& center, double radius, const Ray& ray) {
     Vec3 oc = center - ray.getOrigin();
-    double a = dot(ray.getDirection(), ray.getDirection());
-    double b = -2.0 * dot(ray.getDirection(), oc);
-    double c = dot(oc, oc) - radius * radius;
-    double discriminant = b*b - 4 * a * c;
-    return (discriminant >= 0);
+    double a = ray.getDirection().length_squared();
+    double h = dot(ray.getDirection(), oc);
+    double c = oc.length_squared() - radius * radius;
+    double discriminant = h*h - a * c;
+
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        return (h - std::sqrt(discriminant) ) / (a);
+    }
 }
 
 Color ray_color(const Ray& ray) {
-    if (hit_sphere(Vec3(0, 0, -1), 0.5, ray)) {
-        return Color(1, 0, 0);
+    double t = hit_sphere(Vec3(0, 0, -1), 0.5, ray);
+    if (t > 0.0) {
+        Vec3 normal = normalize(ray.at(t) - Vec3(0, 0, -1));
+        return 0.5 * Color(normal.x + 1, normal.y + 1, normal.z + 1);
     }
+
     Vec3 unit_direction = normalize(ray.getDirection());
     double a = 0.5 * (unit_direction.y + 1.0);
     return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
