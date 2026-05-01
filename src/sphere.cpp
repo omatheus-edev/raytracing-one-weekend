@@ -10,6 +10,7 @@ bool Sphere::hit(const Ray &ray, double ray_tmin, double ray_tmax, HitRecord &re
     if (discriminant < 0) {
         return false;
     }
+
     double sqrtd = std::sqrt(discriminant);
     double root = (h - sqrtd) / a;
     if (root <= ray_tmin || ray_tmax <= root) {
@@ -17,10 +18,10 @@ bool Sphere::hit(const Ray &ray, double ray_tmin, double ray_tmax, HitRecord &re
         if (root <= ray_tmin || ray_tmax <= root) {
             return false;
         }
-
-        record.t = root;
-        record.vec = ray.at(record.t);
-        record.normal = (record.vec - center) / radius;
-        return true;
     }
+
+    record.t = root;
+    record.vec = ray.at(record.t);
+    record.normal = (record.vec - center) / radius;
+    return true;
 }
