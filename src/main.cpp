@@ -1,28 +1,12 @@
-#include <iostream>
-#include <cmath>
-#include "math/vec3.hpp"
-#include "color.hpp"
-#include "ray.hpp"
+#include "util..hpp"
+#include "sphere.hpp"
+#include "hittable.hpp"
+#include "hittable_list.hpp"
 
-double hit_sphere(const Vec3& center, double radius, const Ray& ray) {
-    Vec3 oc = center - ray.getOrigin();
-    double a = ray.getDirection().length_squared();
-    double h = dot(ray.getDirection(), oc);
-    double c = oc.length_squared() - radius * radius;
-    double discriminant = h*h - a * c;
-
-    if (discriminant < 0) {
-        return -1.0;
-    } else {
-        return (h - std::sqrt(discriminant) ) / (a);
-    }
-}
-
-Color ray_color(const Ray& ray) {
-    double t = hit_sphere(Vec3(0, 0, -1), 0.5, ray);
-    if (t > 0.0) {
-        Vec3 normal = normalize(ray.at(t) - Vec3(0, 0, -1));
-        return 0.5 * Color(normal.x + 1, normal.y + 1, normal.z + 1);
+Color ray_color(const Ray& ray, const Hittable& world) {
+    HitRecord record;
+    if (world.hit(ray, 0, infinity, record)) {
+        return 0.5 * (record.normal + Color(1, 1, 1));
     }
 
     Vec3 unit_direction = normalize(ray.getDirection());
@@ -35,6 +19,10 @@ int main() {
     int image_width = 400;
     int image_height = int(image_width / aspect_ratio);
     image_height = (image_height < 1) ? 1 : image_height;
+
+    HittableList world;
+    world.add(std::make_shared<Sphere>(Vec3(0,0,-1), 0.5));
+    world.add(std::make_shared<Sphere>(Vec3(0,-100.5,-1), 100));
 
     float focal_length = 1.0;
     double viewport_height = 2.0;
@@ -55,7 +43,7 @@ int main() {
             Vec3 ray_direction = pixel_center - camera_center;
             Ray ray(camera_center, ray_direction);
 
-            Color pixel_color = ray_color(ray);
+            Color pixel_color = ray_color(ray, world);
             write_color(std::cout, pixel_color);
         }
     }

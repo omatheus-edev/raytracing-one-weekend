@@ -7,6 +7,8 @@ struct Vec3 {
     double y;
     double z;
 
+    Vec3() = default;
+
     Vec3(double x, double y, double z);
 
     Vec3 operator-() const;
