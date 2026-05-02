@@ -1,6 +1,6 @@
 #include "sphere.hpp"
 
-bool Sphere::hit(const Ray &ray, double ray_tmin, double ray_tmax, HitRecord &record) const {
+bool Sphere::hit(const Ray &ray, Interval interval, HitRecord &record) const {
     Vec3 oc = center - ray.getOrigin();
     double a = ray.getDirection().length_squared();
     double h = dot(ray.getDirection(), oc);
@@ -13,9 +13,9 @@ bool Sphere::hit(const Ray &ray, double ray_tmin, double ray_tmax, HitRecord &re
 
     double sqrtd = std::sqrt(discriminant);
     double root = (h - sqrtd) / a;
-    if (root <= ray_tmin || ray_tmax <= root) {
+    if (!interval.surrounds(root)) {
         root = (h + sqrtd) / a;
-        if (root <= ray_tmin || ray_tmax <= root) {
+        if (!interval.surrounds(root)) {
             return false;
         }
     }
@@ -24,6 +24,5 @@ bool Sphere::hit(const Ray &ray, double ray_tmin, double ray_tmax, HitRecord &re
     record.vec = ray.at(record.t);
     Vec3 outward_normal = (record.vec - center) / radius;
     record.setFaceNormal(ray, outward_normal);
-    // record.normal = (record.vec - center) / radius;
     return true;
 }

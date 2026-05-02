@@ -1,11 +1,11 @@
-#include "util..hpp"
+#include "util.hpp"
 #include "sphere.hpp"
 #include "hittable.hpp"
 #include "hittable_list.hpp"
 
 Color ray_color(const Ray& ray, const Hittable& world) {
     HitRecord record;
-    if (world.hit(ray, 0, infinity, record)) {
+    if (world.hit(ray, Interval(0, infinity), record)) {
         return 0.5 * (record.normal + Color(1, 1, 1));
     }
 

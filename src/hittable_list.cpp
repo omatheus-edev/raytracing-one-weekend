@@ -12,13 +12,13 @@ void HittableList::add(std::shared_ptr<Hittable> object) {
     objects.push_back(object);
 }
 
-bool HittableList::hit(const Ray &ray, double ray_tmin, double ray_tmax, HitRecord &record) const {
+bool HittableList::hit(const Ray &ray, Interval interval, HitRecord &record) const {
     HitRecord temp_rec;
     bool hit_anything = false;
-    double closest_so_far = ray_tmax;
+    double closest_so_far = interval.max;
 
     for (const std::shared_ptr<Hittable>& object : objects) {
-        if (object->hit(ray, ray_tmin, closest_so_far, temp_rec)) {
+        if (object->hit(ray, Interval(interval.min, closest_so_far), temp_rec)) {
             hit_anything = true;
             closest_so_far = temp_rec.t;
             record = temp_rec;
