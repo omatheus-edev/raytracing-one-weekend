@@ -7,6 +7,11 @@ public:
     Vec3 vec;
     Vec3 normal;
     double t;
+    bool frontFace;
+
+    HitRecord();
+
+    void setFaceNormal(const Ray& ray, const Vec3& outwardNormal);
 };
 
 class Hittable {

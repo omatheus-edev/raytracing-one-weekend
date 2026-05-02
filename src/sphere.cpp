@@ -22,6 +22,8 @@ bool Sphere::hit(const Ray &ray, double ray_tmin, double ray_tmax, HitRecord &re
 
     record.t = root;
     record.vec = ray.at(record.t);
-    record.normal = (record.vec - center) / radius;
+    Vec3 outward_normal = (record.vec - center) / radius;
+    record.setFaceNormal(ray, outward_normal);
+    // record.normal = (record.vec - center) / radius;
     return true;
 }
