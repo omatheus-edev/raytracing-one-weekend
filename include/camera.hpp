@@ -9,12 +9,16 @@ public:
 
     int image_width = 100;
 
+    int samples_per_pixel = 10;
+
     Camera() = default;
 
     void render(const Hittable& world);
 
 private:
     int image_height;
+
+    double pixel_samples_scale;
 
     Vec3 center;
 
@@ -27,4 +31,8 @@ private:
     void initialize();
 
     Color ray_color(const Ray& ray, const Hittable& world);
+
+    Ray get_ray(int i, int j);
+
+    Vec3 sample_square() const;
 };
