@@ -1,8 +1,13 @@
 #pragma once
 
+#include <cmath>
 #include <iostream>
 
 struct Vec3 {
+    static Vec3 random();
+
+    static Vec3 random(double min, double max);
+
     double x;
     double y;
     double z;
@@ -66,4 +71,23 @@ inline Vec3 cross(const Vec3& vec, const Vec3& other) {
 
 inline Vec3 normalize(const Vec3& vec) {
     return vec / vec.length();
+}
+
+inline Vec3 random_unit_vector() {
+    while (true) {
+        Vec3 p = Vec3::random(-1, 1);
+        double lensq = p.length_squared();
+        if (1e-160 < lensq && lensq <= 1) {
+            return p / std::sqrt(lensq);
+        }
+    }
+}
+
+inline Vec3 random_on_hemisphere(const Vec3& normal) {
+    Vec3 on_unit_sphere = random_unit_vector();
+    if (dot(on_unit_sphere, normal) > 0.0) {
+        return on_unit_sphere;
+    } else {
+        return -on_unit_sphere;
+    }
 }

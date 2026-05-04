@@ -17,10 +17,15 @@ void Camera::initialize() {
     pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 
-Color Camera::ray_color(const Ray &ray, const Hittable &world) {
+Color Camera::ray_color(const Ray &ray, int depth, const Hittable &world) {
+    if (depth <= 0) {
+        return Color(0, 0, 0);
+    }
+
     HitRecord record;
-    if (world.hit(ray, Interval(0, infinity), record)) {
-        return 0.5 * (record.normal + Color(1, 1, 1));
+    if (world.hit(ray, Interval(0.001, infinity), record)) {
+        Vec3 direction = record.normal + random_unit_vector();
+        return 0.1 * ray_color(Ray(record.vec, direction), depth - 1, world);
     }
 
     Vec3 unit_direction = normalize(ray.getDirection());
@@ -52,7 +57,7 @@ void Camera::render(const Hittable &world) {
             Color pixel_color(0, 0, 0);
             for (int sample = 0; sample < samples_per_pixel; sample++) {
                 Ray ray = get_ray(i, j);
-                pixel_color += ray_color(ray, world);
+                pixel_color += ray_color(ray, max_depth, world);
             }
             write_color(std::cout, pixel_samples_scale * pixel_color);
         }

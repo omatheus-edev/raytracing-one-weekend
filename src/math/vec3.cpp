@@ -1,6 +1,14 @@
 #include "math/vec3.hpp"
 
-#include <cmath>
+#include "util.hpp"
+
+Vec3 Vec3::random() {
+    return Vec3(random_double(), random_double(), random_double());
+}
+
+Vec3 Vec3::random(double min, double max) {
+    return Vec3(random_double(min,max), random_double(min,max), random_double(min,max));
+}
 
 Vec3::Vec3(double x, double y, double z) : x(x), y(y), z(z) {}
 

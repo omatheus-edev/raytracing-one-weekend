@@ -11,6 +11,8 @@ public:
 
     int samples_per_pixel = 10;
 
+    int max_depth = 10;
+
     Camera() = default;
 
     void render(const Hittable& world);
@@ -30,7 +32,7 @@ private:
 
     void initialize();
 
-    Color ray_color(const Ray& ray, const Hittable& world);
+    Color ray_color(const Ray& ray, int depth, const Hittable& world);
 
     Ray get_ray(int i, int j);
 
