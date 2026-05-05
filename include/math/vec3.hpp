@@ -27,6 +27,8 @@ struct Vec3 {
     [[nodiscard]] double length() const;
 
     [[nodiscard]] double length_squared() const;
+
+    [[nodiscard]] bool near_zero() const;
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Vec3& vec) {
@@ -90,4 +92,8 @@ inline Vec3 random_on_hemisphere(const Vec3& normal) {
     } else {
         return -on_unit_sphere;
     }
+}
+
+inline Vec3 reflect(const Vec3& vec, const Vec3& other) {
+    return vec - 2 * dot(vec, other) * other;
 }
