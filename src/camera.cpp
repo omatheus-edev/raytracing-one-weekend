@@ -24,8 +24,12 @@ Color Camera::ray_color(const Ray &ray, int depth, const Hittable &world) {
 
     HitRecord record;
     if (world.hit(ray, Interval(0.001, infinity), record)) {
-        Vec3 direction = record.normal + random_unit_vector();
-        return 0.1 * ray_color(Ray(record.vec, direction), depth - 1, world);
+        Ray scattered;
+        Color attenuation;
+        if (record.material->scatter(ray, record, attenuation, scattered)) {
+            return attenuation * ray_color(scattered, depth - 1, world);
+        }
+        return Color(0, 0, 0);
     }
 
     Vec3 unit_direction = normalize(ray.getDirection());

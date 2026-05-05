@@ -4,6 +4,8 @@
 
 struct Ray {
 public:
+    Ray() = default;
+
     Ray(const Vec3& origin, const Vec3& direction);
 
     [[nodiscard]] const Vec3& getOrigin() const;
