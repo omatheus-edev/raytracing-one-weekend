@@ -5,6 +5,8 @@
 
 class Dielectric final : public Material {
 private:
+    static double reflectance(double cosine, double refraction_index);
+
     double refraction_index;
 
 public:
