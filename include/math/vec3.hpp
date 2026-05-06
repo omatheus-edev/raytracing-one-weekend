@@ -97,3 +97,10 @@ inline Vec3 random_on_hemisphere(const Vec3& normal) {
 inline Vec3 reflect(const Vec3& vec, const Vec3& other) {
     return vec - 2 * dot(vec, other) * other;
 }
+
+inline Vec3 refract(const Vec3& vec, const Vec3& other, double etai_over_etat) {
+    double cos_theta = std::fmin(dot(-vec, other), 1.0);
+    Vec3 r_out_perp = etai_over_etat * (vec + cos_theta * other);
+    Vec3 r_out_parallel = -std::sqrt(std::fabs(1.0 - r_out_perp.length_squared())) * other;
+    return r_out_parallel + r_out_perp;
+}
