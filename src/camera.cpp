@@ -6,10 +6,9 @@ void Camera::initialize() {
     image_height = (image_height < 1) ? 1 : image_height;
     pixel_samples_scale = 1.0 / samples_per_pixel;
     center = look_from;
-    double focal_length = (look_from - look_at).length();
     double theta = degress_to_radians(vfov);
     double h = std::tan(theta / 2);
-    double viewport_height = 2.0 * h * focal_length;
+    double viewport_height = 2.0 * h * focus_dist;
     double viewport_width = viewport_height * (double(image_width)/image_height);
     w = normalize(look_from - look_at);
     u = normalize(cross(vup, w));
@@ -18,8 +17,11 @@ void Camera::initialize() {
     Vec3 viewport_v = viewport_height * -v;;
     pixel_delta_u = viewport_u / image_width;
     pixel_delta_v = viewport_v / image_height;
-    Vec3 viewport_upper_left = center - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
+    Vec3 viewport_upper_left = center - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
     pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+    double defocus_radius = focus_dist * std::tan(degress_to_radians(defocus_angle / 2));
+    defocus_disk_u = u * defocus_radius;
+    defocus_disk_v = v * defocus_radius;
 }
 
 Color Camera::ray_color(const Ray &ray, int depth, const Hittable &world) {
@@ -51,9 +53,14 @@ Ray Camera::get_ray(int i, int j) {
     Vec3 pixel_sample = pixel00_loc
                           + ((i + offset.x) * pixel_delta_u)
                           + ((j + offset.y) * pixel_delta_v);
-    Vec3 ray_origin = center;
+    Vec3 ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
     Vec3 ray_direction = pixel_sample - ray_origin;
     return Ray(ray_origin, ray_direction);
+}
+
+Vec3 Camera::defocus_disk_sample() const {
+    Vec3 vec = random_in_unit_disk();
+    return center + (vec.x * defocus_disk_u) + (vec.y * defocus_disk_v);
 }
 
 void Camera::render(const Hittable &world) {

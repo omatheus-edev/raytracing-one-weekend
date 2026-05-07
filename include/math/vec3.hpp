@@ -85,6 +85,15 @@ inline Vec3 random_unit_vector() {
     }
 }
 
+inline Vec3 random_in_unit_disk() {
+    while (true) {
+        Vec3 vec = Vec3(Vec3::random(-1, 1).x, Vec3::random(-1, 1).y, 0);
+        if (vec.length_squared() < 1) {
+            return vec;
+        }
+    }
+}
+
 inline Vec3 random_on_hemisphere(const Vec3& normal) {
     Vec3 on_unit_sphere = random_unit_vector();
     if (dot(on_unit_sphere, normal) > 0.0) {

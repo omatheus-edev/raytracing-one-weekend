@@ -6,7 +6,6 @@
 #include <iostream>
 #include <memory>
 #include "color.hpp"
-#include "ray.hpp"
 #include "math/vec3.hpp"
 #include "interval.hpp"
 

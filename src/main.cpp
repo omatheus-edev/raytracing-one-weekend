@@ -29,6 +29,8 @@ int main() {
     camera.look_from = Vec3(-2, 2, 1);
     camera.look_at = Vec3(0, 0, 1);
     camera.vup = Vec3(0, 1, 0);
+    camera.defocus_angle = 10;
+    camera.focus_dist = 3.4;
     camera.render(world);
     return 0;
 }
